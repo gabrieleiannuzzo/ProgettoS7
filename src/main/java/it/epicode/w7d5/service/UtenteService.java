@@ -49,6 +49,15 @@ public class UtenteService {
         return utenteRepository.save(utente);
     }
 
+    public Utente update(String username, UtenteDTO utenteDTO){
+        Utente utente = getByUsername(username);
+        utente.setNome(utenteDTO.getNome());
+        utente.setCognome(utenteDTO.getCognome());
+        utente.setUsername(utenteDTO.getUsername());
+        utente.setPassword(encoder.encode(utenteDTO.getPassword()));
+        return utenteRepository.save(utente);
+    }
+
     public void delete(String username){
         Utente utente = getByUsername(username);
         utenteRepository.delete(utente);
