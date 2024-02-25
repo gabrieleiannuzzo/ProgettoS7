@@ -53,7 +53,8 @@ public class EventoService {
 
     public Evento update(int id, EventoDTO eventoDTO){
         Evento evento = getById(id);
-        if (evento.getPrenotazioni().size() > eventoDTO.getNumeroPostiDisponibili()) throw new BadRequestException("Il numero di posti disponibili non può essere minore del numero di posti già prenotati dagli utenti");
+        if (evento.getPrenotazioni().size() > eventoDTO.getNumeroPostiDisponibili()) throw new ConflictException("Il numero di posti disponibili non può essere minore del numero di posti già prenotati dagli utenti");
+        evento.setNumeroPostiDisponibili(eventoDTO.getNumeroPostiDisponibili());
         evento.setTitolo(eventoDTO.getTitolo());
         evento.setDescrizione(eventoDTO.getDescrizione());
         evento.setData(eventoDTO.getData());

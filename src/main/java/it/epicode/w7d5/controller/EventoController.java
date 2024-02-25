@@ -9,6 +9,7 @@ import it.epicode.w7d5.service.EventoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +33,7 @@ public class EventoController {
     }
 
     @PostMapping("/eventi")
+    @PreAuthorize("hasAuthority('ORGANIZZATORE')")
     @ResponseStatus(HttpStatus.CREATED)
     public CustomResponse save(@RequestBody @Validated EventoDTO eventoDTO, BindingResult bindingResult){
         if (bindingResult.hasErrors()) throw new BadRequestException(ErrorResponse.handleValidationMessages(bindingResult));
@@ -39,12 +41,14 @@ public class EventoController {
     }
 
     @PutMapping("/eventi/{id}")
+    @PreAuthorize("hasAuthority('ORGANIZZATORE')")
     public CustomResponse update(@PathVariable int id, @RequestBody @Validated EventoDTO eventoDTO, BindingResult bindingResult){
         if (bindingResult.hasErrors()) throw new BadRequestException(ErrorResponse.handleValidationMessages(bindingResult));
         return new CustomResponse(HttpStatus.OK.toString(), eventoService.update(id, eventoDTO));
     }
 
     @DeleteMapping("/eventi/{id}")
+    @PreAuthorize("hasAuthority('ORGANIZZATORE')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public CustomResponse delete(@PathVariable int id){
         eventoService.delete(id);
@@ -58,6 +62,7 @@ public class EventoController {
     }
 
     @GetMapping("/eventi/{id}/prenotazioni")
+    @PreAuthorize("hasAuthority('ORGANIZZATORE')")
     public CustomResponse getPrenotazioniByIdEvento(@PathVariable int id){
         return new CustomResponse(HttpStatus.OK.toString(), eventoService.getPrenotazioniByIdEvento(id));
     }
