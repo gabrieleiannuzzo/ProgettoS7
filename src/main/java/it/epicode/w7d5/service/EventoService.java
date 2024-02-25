@@ -69,14 +69,21 @@ public class EventoService {
 
     public Prenotazione prenota(int id, String username){
         Evento evento = getById(id);
-        if (evento.getPrenotazioni().size() == evento.getNumeroPostiDisponibili()) throw new ConflictException("Il numero massimo di posti è già stato prenotatio");
+        if (evento.getPrenotazioni().size() == evento.getNumeroPostiDisponibili()) throw new ConflictException("Il numero massimo di posti è già stato prenotato");
         Utente utente = utenteService.getByUsername(username);
-        if (prenotazioneRepository.checkPrenotazioneByIdEventoEIdUtente(id, utente.getId()) != null) throw new ConflictException("Hai già prenotato questo evento");
+        if (prenotazioneRepository.getPrenotazioneByIdEventoEIdUtente(id, utente.getId()) != null) throw new ConflictException("Hai già prenotato questo evento");
         Prenotazione prenotazione = new Prenotazione();
         prenotazione.setEvento(evento);
         prenotazione.setUtente(utente);
         prenotazione.setDataPrenotazione(LocalDate.now());
         return prenotazioneRepository.save(prenotazione);
+    }
+
+    public void annullaPrenotazione(int id, String username){
+        Utente utente = utenteService.getByUsername(username);
+        Prenotazione prenotazione = prenotazioneRepository.getPrenotazioneByIdEventoEIdUtente(id, utente.getId());
+        if (prenotazione == null) throw new ConflictException("Nessuna prenotazione di questo utente per questo evento");
+        prenotazioneRepository.delete(prenotazione);
     }
 
     public List<Prenotazione> getPrenotazioniByIdEvento(int id){

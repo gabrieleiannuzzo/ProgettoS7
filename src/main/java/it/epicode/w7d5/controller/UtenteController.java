@@ -11,6 +11,7 @@ import it.epicode.w7d5.service.UtenteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -42,8 +43,8 @@ public class UtenteController {
     }
 
     @PatchMapping("/utenti/{username}")
-    public CustomResponse changeRole(@PathVariable String username, @RequestBody ChangeRoleDTO changeRoleDTO, @RequestHeader("Authorization") String jwt){
-        checkUser(username, jwt);
+    @PreAuthorize("hasAuthority('ORGANIZZATORE')")
+    public CustomResponse changeRole(@PathVariable String username, @RequestBody ChangeRoleDTO changeRoleDTO){
         return new CustomResponse(HttpStatus.OK.toString(), utenteService.changeRole(username, changeRoleDTO.getRole()));
     }
 

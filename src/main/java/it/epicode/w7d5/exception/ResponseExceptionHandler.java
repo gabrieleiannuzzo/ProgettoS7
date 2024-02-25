@@ -21,7 +21,7 @@ public class ResponseExceptionHandler {
 
     @ExceptionHandler(UnauthorizedException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ErrorResponse badRequestExceptionHandler(UnauthorizedException e){
+    public ErrorResponse unauthorizedExceptionHandler(UnauthorizedException e){
         return new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
     }
 

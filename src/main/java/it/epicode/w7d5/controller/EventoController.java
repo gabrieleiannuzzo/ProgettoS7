@@ -62,6 +62,14 @@ public class EventoController {
         return new CustomResponse(HttpStatus.OK.toString(), eventoService.prenota(id, username));
     }
 
+    @DeleteMapping("/eventi/{id}/annulla-prenotazione")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public CustomResponse annullaPrenotazione(@PathVariable int id, @RequestHeader("Authorization") String jwt){
+        String username = jwtTools.extractUsernameFromToken(jwt.substring(7));
+        eventoService.annullaPrenotazione(id, username);
+        return new CustomResponse(HttpStatus.NO_CONTENT.toString(), null);
+    }
+
     @GetMapping("/eventi/{id}/prenotazioni")
     @PreAuthorize("hasAuthority('ORGANIZZATORE')")
     public CustomResponse getPrenotazioniByIdEvento(@PathVariable int id){

@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface PrenotazioneRepository extends JpaRepository<Prenotazione, Integer>, PagingAndSortingRepository<Prenotazione, Integer> {
     @Query("SELECT p FROM Prenotazione p WHERE p.evento.id = :idEvento AND p.utente.id = :idUtente")
-    public Prenotazione checkPrenotazioneByIdEventoEIdUtente(int idEvento, int idUtente);
+    public Prenotazione getPrenotazioneByIdEventoEIdUtente(int idEvento, int idUtente);
 
     @Query("SELECT p FROM Prenotazione p WHERE p.evento.id = :id")
     public List<Prenotazione> getPrenotazioniByIdEvento(int id);
