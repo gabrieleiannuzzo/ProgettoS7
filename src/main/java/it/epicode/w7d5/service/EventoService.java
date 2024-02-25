@@ -1,6 +1,7 @@
 package it.epicode.w7d5.service;
 
 import it.epicode.w7d5.DTO.EventoDTO;
+import it.epicode.w7d5.exception.BadRequestException;
 import it.epicode.w7d5.exception.NotFoundException;
 import it.epicode.w7d5.model.Evento;
 import it.epicode.w7d5.repository.EventoRepository;
@@ -30,5 +31,20 @@ public class EventoService {
         evento.setLuogo(eventoDTO.getLuogo());
         evento.setNumeroPostiDisponibili(eventoDTO.getNumeroPostiDisponibili());
         return eventoRepository.save(evento);
+    }
+
+    public Evento update(int id, EventoDTO eventoDTO){
+        Evento evento = getById(id);
+        if (evento.getUtenti().size() > eventoDTO.getNumeroPostiDisponibili()) throw new BadRequestException("Il numero di posti disponibili non può essere minore del numero di posti già prenotati dagli utenti");
+        evento.setTitolo(eventoDTO.getTitolo());
+        evento.setDescrizione(eventoDTO.getDescrizione());
+        evento.setData(eventoDTO.getData());
+        evento.setLuogo(eventoDTO.getLuogo());
+        return eventoRepository.save(evento);
+    }
+
+    public void delete(int id){
+        Evento evento = getById(id);
+        eventoRepository.delete(evento);
     }
 }

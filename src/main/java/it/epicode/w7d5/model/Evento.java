@@ -1,5 +1,6 @@
 package it.epicode.w7d5.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -20,5 +21,6 @@ public class Evento {
     private String luogo;
     private int numeroPostiDisponibili;
     @ManyToMany(mappedBy = "eventi")
+    @JsonIgnore
     private List<Utente> utenti;
 }

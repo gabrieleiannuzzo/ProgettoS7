@@ -1,5 +1,6 @@
 package it.epicode.w7d5.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -30,6 +31,7 @@ public class Utente implements UserDetails {
             joinColumns = @JoinColumn(name = "id_utente"),
             inverseJoinColumns = @JoinColumn(name = "id_evento")
     )
+    @JsonIgnore
     private List<Evento> eventi;
 
     @Override

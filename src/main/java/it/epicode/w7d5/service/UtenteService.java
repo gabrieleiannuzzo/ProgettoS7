@@ -11,6 +11,8 @@ import it.epicode.w7d5.model.Utente;
 import it.epicode.w7d5.repository.UtenteRepository;
 import it.epicode.w7d5.security.JwtTools;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,10 @@ public class UtenteService {
 
     @Autowired
     private JwtTools jwtTools;
+
+    public Page<Utente> getAll(Pageable pageable){
+        return utenteRepository.findAll(pageable);
+    }
 
     public Utente getById(int id){
         return utenteRepository.findById(id).orElseThrow(() -> new NotFoundException("Utente con id " + id + " non trovato"));
