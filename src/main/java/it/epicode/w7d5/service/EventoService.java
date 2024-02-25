@@ -2,18 +2,35 @@ package it.epicode.w7d5.service;
 
 import it.epicode.w7d5.DTO.EventoDTO;
 import it.epicode.w7d5.exception.BadRequestException;
+import it.epicode.w7d5.exception.ConflictException;
 import it.epicode.w7d5.exception.NotFoundException;
 import it.epicode.w7d5.model.Evento;
+import it.epicode.w7d5.model.Prenotazione;
+import it.epicode.w7d5.model.Utente;
 import it.epicode.w7d5.repository.EventoRepository;
+import it.epicode.w7d5.repository.PrenotazioneRepository;
+import it.epicode.w7d5.security.JwtTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 
 @Service
 public class EventoService {
     @Autowired
     private EventoRepository eventoRepository;
+
+    @Autowired
+    private PrenotazioneRepository prenotazioneRepository;
+
+    @Autowired
+    private UtenteService utenteService;
+
+    @Autowired
+    private JwtTools jwtTools;
 
     public Page<Evento> getAll(Pageable pageable){
         return eventoRepository.findAll(pageable);
@@ -35,7 +52,7 @@ public class EventoService {
 
     public Evento update(int id, EventoDTO eventoDTO){
         Evento evento = getById(id);
-        if (evento.getUtenti().size() > eventoDTO.getNumeroPostiDisponibili()) throw new BadRequestException("Il numero di posti disponibili non può essere minore del numero di posti già prenotati dagli utenti");
+        if (evento.getPrenotazioni().size() > eventoDTO.getNumeroPostiDisponibili()) throw new BadRequestException("Il numero di posti disponibili non può essere minore del numero di posti già prenotati dagli utenti");
         evento.setTitolo(eventoDTO.getTitolo());
         evento.setDescrizione(eventoDTO.getDescrizione());
         evento.setData(eventoDTO.getData());
@@ -46,5 +63,17 @@ public class EventoService {
     public void delete(int id){
         Evento evento = getById(id);
         eventoRepository.delete(evento);
+    }
+
+    public Prenotazione prenota(int id, String username){
+        Evento evento = getById(id);
+        if (evento.getPrenotazioni().size() == evento.getNumeroPostiDisponibili()) throw new ConflictException("Il numero massimo di posti è già stato prenotatio");
+        Utente utente = utenteService.getByUsername(username);
+        if (prenotazioneRepository.checkPrenotazioneByIdEventoEIdUtente(id, utente.getId()) != null) throw new ConflictException("Hai già prenotato questo evento");
+        Prenotazione prenotazione = new Prenotazione();
+        prenotazione.setEvento(evento);
+        prenotazione.setUtente(utente);
+        prenotazione.setDataPrenotazione(LocalDate.now());
+        return prenotazioneRepository.save(prenotazione);
     }
 }

@@ -25,6 +25,12 @@ public class ResponseExceptionHandler {
         return new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
     }
 
+    @ExceptionHandler(ConflictException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse conflictExceptionHandler(ConflictException e){
+        return new ErrorResponse(HttpStatus.CONFLICT.value(), e.getMessage());
+    }
+
     @ExceptionHandler(LoginFaultException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse loginFaultExceptionHandler(LoginFaultException e){

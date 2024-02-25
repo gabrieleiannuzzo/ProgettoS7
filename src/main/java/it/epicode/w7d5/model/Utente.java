@@ -25,14 +25,9 @@ public class Utente implements UserDetails {
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
-    @ManyToMany
-    @JoinTable(
-            name = "prenotazioni",
-            joinColumns = @JoinColumn(name = "id_utente"),
-            inverseJoinColumns = @JoinColumn(name = "id_evento")
-    )
+    @OneToMany(mappedBy = "utente")
     @JsonIgnore
-    private List<Evento> eventi;
+    private List<Prenotazione> prenotazioni;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

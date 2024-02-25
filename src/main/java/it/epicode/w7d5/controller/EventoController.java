@@ -4,6 +4,7 @@ import it.epicode.w7d5.DTO.EventoDTO;
 import it.epicode.w7d5.exception.BadRequestException;
 import it.epicode.w7d5.exception.ErrorResponse;
 import it.epicode.w7d5.model.CustomResponse;
+import it.epicode.w7d5.security.JwtTools;
 import it.epicode.w7d5.service.EventoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +17,9 @@ import org.springframework.web.bind.annotation.*;
 public class EventoController {
     @Autowired
     private EventoService eventoService;
+
+    @Autowired
+    private JwtTools jwtTools;
 
     @GetMapping("/eventi")
     public CustomResponse getAll(Pageable pageable){
@@ -45,5 +49,11 @@ public class EventoController {
     public CustomResponse delete(@PathVariable int id){
         eventoService.delete(id);
         return new CustomResponse(HttpStatus.NO_CONTENT.toString(), null);
+    }
+
+    @PostMapping("/eventi/{id}/prenota")
+    public CustomResponse prenota(@PathVariable int id, @RequestHeader("Authorization") String jwt){
+        String username = jwtTools.extractUsernameFromToken(jwt.substring(7));
+        return new CustomResponse(HttpStatus.OK.toString(), eventoService.prenota(id, username));
     }
 }

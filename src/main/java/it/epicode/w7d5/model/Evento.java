@@ -20,7 +20,7 @@ public class Evento {
     private LocalDate data;
     private String luogo;
     private int numeroPostiDisponibili;
-    @ManyToMany(mappedBy = "eventi")
+    @OneToMany(mappedBy = "evento")
     @JsonIgnore
-    private List<Utente> utenti;
+    private List<Prenotazione> prenotazioni;
 }
