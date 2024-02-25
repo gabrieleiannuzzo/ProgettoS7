@@ -56,4 +56,9 @@ public class EventoController {
         String username = jwtTools.extractUsernameFromToken(jwt.substring(7));
         return new CustomResponse(HttpStatus.OK.toString(), eventoService.prenota(id, username));
     }
+
+    @GetMapping("/eventi/{id}/prenotazioni")
+    public CustomResponse getPrenotazioniByIdEvento(@PathVariable int id){
+        return new CustomResponse(HttpStatus.OK.toString(), eventoService.getPrenotazioniByIdEvento(id));
+    }
 }

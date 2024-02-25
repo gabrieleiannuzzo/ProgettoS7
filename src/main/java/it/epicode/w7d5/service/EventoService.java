@@ -17,6 +17,7 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class EventoService {
@@ -75,5 +76,9 @@ public class EventoService {
         prenotazione.setUtente(utente);
         prenotazione.setDataPrenotazione(LocalDate.now());
         return prenotazioneRepository.save(prenotazione);
+    }
+
+    public List<Prenotazione> getPrenotazioniByIdEvento(int id){
+        return prenotazioneRepository.getPrenotazioniByIdEvento(id);
     }
 }

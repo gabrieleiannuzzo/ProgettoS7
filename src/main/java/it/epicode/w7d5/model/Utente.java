@@ -1,6 +1,7 @@
 package it.epicode.w7d5.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,6 +14,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "utenti")
+@JsonIgnoreProperties(value = {"enabled", "accountNonExpired", "credentialsNonExpired", "authorities", "accountNonLocked"})
 public class Utente implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenza_utenti")
