@@ -57,6 +57,7 @@ public class EventoController {
 
     @PostMapping("/eventi/{id}/prenota")
     public CustomResponse prenota(@PathVariable int id, @RequestHeader("Authorization") String jwt){
+        // Recupero dal jwt l'username dell'utente
         String username = jwtTools.extractUsernameFromToken(jwt.substring(7));
         return new CustomResponse(HttpStatus.OK.toString(), eventoService.prenota(id, username));
     }
